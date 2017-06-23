@@ -8,8 +8,18 @@ public class Board {
     private char[][] board;
 
 
+    private int[] rowsCount;    // X is +1 , O is -1
+    private int[] columnCount;    // X is +1, O is -1
+    private int diagnal;
+    private int antiDiagnal;
+
     public Board() {
+        rowsCount = new int[3];
+        columnCount = new int[3];
+        diagnal = 0;
+        antiDiagnal = 0;
         board = new char[3][3];
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 board[i][j] = '-';
@@ -23,11 +33,33 @@ public class Board {
             if (row <= 2 && column <= 2) {
                 if (row >= 0 && column >= 0) {
                     board[row][column] = type;
+
+                    keepScore(type, row, column);
+                    didPlayerWin(type,row,column);
                     return true;
                 }
             }
         }
         return false;
+    }
+    public void keepScore(char type, int row, int column) {
+        // keep score
+        int toAdd = 0;
+        if (type == 'X') {
+            toAdd = 1;
+        } else {
+            toAdd = -1;
+        }
+        rowsCount[row] += toAdd;
+        rowsCount[column] += toAdd;
+        if (row == column) {
+            diagnal++;
+        }
+        if (column == (3 - row - 1)) {
+            antiDiagnal++;
+        }
+
+
     }
 
     public String toString() {
@@ -71,59 +103,16 @@ public class Board {
 
     }
 
-    public char didPlayerWin() {      // return the player that won
-        // there are only 8 different ways (3 vert, 3 horiz, 2 diag) to make 3 in a row, brute force check all
-        // vert
-        for (int i = 0;  i < 3; i++) { // go through all columns
-            if (board[0][i] == 'X' &&
-                    board[1][i] == 'X' &&
-                    board[2][i] == 'X'
-                    ) {
-                return 'X';
-            }
-            if (board[0][i] == 'O' &&
-                    board[1][i] == 'O' &&
-                    board[2][i] == 'O') {
-
-                return 'O';
-            }
+    public char didPlayerWin (char type, int row, int column) {
+        if (Math.abs(rowsCount[row]) == 3 ||
+                Math.abs(columnCount[column]) == 3 ||
+                Math.abs(diagnal) == 3  ||
+                Math.abs(antiDiagnal) == 3)
+        {
+            System.out.println(type + " player won!!!");
+            return type;
         }
-        // horizontal
-        for (int i = 0;  i < 3; i++) { // go through all columns
-            if (board[i][0] == 'X' &&
-                    board[i][1] == 'X' &&
-                    board[i][2] == 'X'
-                    ) {
-                return 'X';
-            }
-            if (board[i][0] == 'O' &&
-                    board[i][1] == 'O' &&
-                    board[i][2] == 'O'
-                    ) {
-                return 'O';
-            }
-        }
-        // diag
-        int countO = 0;
-        int countX = 0;
-        for (int i = 0; i < 3; i++) {
-            if (board[i][i] == 'X') {
-                countX++;
-            }
-            if (board[i][i] == 'O') {
-                countO++;
-            }
-        }
-        if (countO == 3) {
-            return 'O';
-        }
-        if (countX == 3) {
-            return 'X';
-        }
-
-        // TODO: other diag
-
-        return '_';
+        return '-';
     }
 
 }
