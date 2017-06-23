@@ -10,14 +10,14 @@ public class Board {
 
     private int[] rowsCount;    // X is +1 , O is -1
     private int[] columnCount;    // X is +1, O is -1
-    private int diagnal;
-    private int antiDiagnal;
+    private int diagnalCount;
+    private int antiDiagnalCount;
 
     public Board() {
         rowsCount = new int[3];
         columnCount = new int[3];
-        diagnal = 0;
-        antiDiagnal = 0;
+        diagnalCount = 0;
+        antiDiagnalCount = 0;
         board = new char[3][3];
 
         for (int i = 0; i < 3; i++) {
@@ -53,10 +53,10 @@ public class Board {
         rowsCount[row] += toAdd;
         rowsCount[column] += toAdd;
         if (row == column) {
-            diagnal++;
+            diagnalCount++;
         }
         if (column == (3 - row - 1)) {
-            antiDiagnal++;
+            antiDiagnalCount++;
         }
 
 
@@ -106,8 +106,8 @@ public class Board {
     public char didPlayerWin (char type, int row, int column) {
         if (Math.abs(rowsCount[row]) == 3 ||
                 Math.abs(columnCount[column]) == 3 ||
-                Math.abs(diagnal) == 3  ||
-                Math.abs(antiDiagnal) == 3)
+                Math.abs(diagnalCount) == 3  ||
+                Math.abs(antiDiagnalCount) == 3)
         {
             System.out.println(type + " player won!!!");
             return type;
